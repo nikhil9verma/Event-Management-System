@@ -1,0 +1,14 @@
+# Java / Spring Boot
+target/
+*.log
+
+# Node / Vite
+node_modules/
+dist/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
