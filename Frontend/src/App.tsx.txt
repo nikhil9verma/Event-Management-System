@@ -1,0 +1,17 @@
+import { Routes,Route } from "react-router-dom"
+import SearchResults from "./Pages/SearchResults"
+import Home from "./Pages/Home"
+import Navbar from "./components/layout/Navbar"
+function App() {
+  return (
+    <>
+    <Navbar />
+    <Routes>
+      <Route path="/" element={<Home/>}/>
+      <Route path="/search/:query" element={<SearchResults/>}/>
+    </Routes>
+    </>
+  )
+}
+
+export default App
