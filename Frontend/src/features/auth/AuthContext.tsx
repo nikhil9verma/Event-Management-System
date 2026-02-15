@@ -1,15 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import  { createContext, useContext, useEffect, useState } from 'react'
 
 import type { ReactNode } from 'react'
 
-interface AuthState{
-    token:string | null;
-    role:string| null;
-}
 
-interface AuthContextType extends AuthState{
+interface AuthContextType {
     login:(token:string ) =>void;
     logout:()=>void;
+    token: string| null;
+    role:string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,12 +18,23 @@ export const AuthProvider = ({children}:{children:ReactNode}) => {
     );
     const [role, setrole] = useState<string | null>(null);
     
-    useEffect(()=>{
-        if(token){
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            setrole(payload.role);
-        }
-    },[token])
+    useEffect(() => {
+    if (!token) {
+      setrole(null);
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(
+        atob(token.split(".")[1])
+      );
+
+      setrole(payload.role);
+    } catch (error) {
+      console.error("Invalid token");
+      setrole(null);
+    }
+  }, [token]);
 
     const login = (jwt:string)=>{
         localStorage.setItem("token",jwt);
@@ -42,7 +51,7 @@ export const AuthProvider = ({children}:{children:ReactNode}) => {
     <AuthContext.Provider value={{token,role,login,logout}}>
         {children}
     </AuthContext.Provider>
-  )
+  );
 };
 
 
