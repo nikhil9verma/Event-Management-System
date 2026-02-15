@@ -10,13 +10,28 @@ import java.time.LocalDateTime;
 @Table(name = "role_requests")
 @Data
 public class RoleRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // <--- DANGER: Don't expose this directly to API
+    private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleRequestStatus status;
+
+    @Column(nullable = false)
     private LocalDateTime requestedAt;
+
+    private LocalDateTime reviewedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "reviewed_by")
+    private User reviewedBy; // SUPER_ADMIN
+
+    private String rejectionReason;
 }
+

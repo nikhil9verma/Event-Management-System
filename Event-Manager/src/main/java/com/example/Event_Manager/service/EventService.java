@@ -1,6 +1,7 @@
 package com.example.Event_Manager.service;
 
 import com.example.Event_Manager.dto.CreateEventRequest;
+import com.example.Event_Manager.dto.EventResponse;
 import com.example.Event_Manager.model.Event;
 import com.example.Event_Manager.model.Role;
 import com.example.Event_Manager.model.User;
@@ -61,9 +62,25 @@ public class EventService {
     }
 
     // --- READ ---
-    public List<Event> getUpcomingEvents(){
-        return eventRepository.findByEventDateAfter(LocalDateTime.now());
+    public List<EventResponse> getUpcomingEvents(){
+        return eventRepository
+                .findByEventDateAfterOrderByEventDateAsc(LocalDateTime.now())
+                .stream()
+                .map(EventResponse::new)
+                .toList();
     }
+
+
+    public List<EventResponse> getMyEvents(String email) {
+        User host = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return eventRepository.findByHost(host)
+                .stream()
+                .map(EventResponse::new)
+                .toList();
+    }
+
 
     // --- UPDATE ---
     public Event updateEvent(Long eventId, CreateEventRequest request, String email) {

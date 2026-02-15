@@ -1,6 +1,7 @@
 package com.example.Event_Manager.controller;
 
 import com.example.Event_Manager.dto.CreateEventRequest;
+import com.example.Event_Manager.dto.EventResponse;
 import com.example.Event_Manager.model.Event;
 import com.example.Event_Manager.service.EventService;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class EventController {
     // Any logged-in user (Student or Host) can view events
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<Event>> getEvents(){
+    public ResponseEntity<List<EventResponse>> getEvents(){
         return ResponseEntity.ok(eventService.getUpcomingEvents());
     }
 
@@ -56,6 +57,12 @@ public class EventController {
         Event updatedEvent = eventService.updateEvent(eventId, request, email);
 
         return ResponseEntity.ok(updatedEvent);
+    }
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('HOST')")
+    public ResponseEntity<List<EventResponse>> getMyEvents(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(eventService.getMyEvents(email));
     }
 
     // 3. Delete Event

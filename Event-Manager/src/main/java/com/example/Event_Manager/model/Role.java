@@ -2,5 +2,6 @@ package com.example.Event_Manager.model;
 
 public enum Role {
     STUDENT,
-    HOST
+    HOST,
+    SUPER_ADMIN
 }
